@@ -1,0 +1,10 @@
+[project]
+name = "aos-army-builder"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = ["textual[syntax]>=8.0.0"]
+
+[dependency-groups]
+dev = ["textual-dev>=1.8.0"]
