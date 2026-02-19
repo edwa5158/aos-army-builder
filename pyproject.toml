@@ -8,3 +8,47 @@ dependencies = ["textual[syntax]>=8.0.0"]
 
 [dependency-groups]
 dev = ["textual-dev>=1.8.0"]
+
+[tool.pyrefly]
+project-includes = ["**/*.py*", "**/*.ipynb"]
+search-path = [".", "./src/", "./src/tests/"]
+python-platform = "linux"
+python-version = "3.13"
+
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/.venv/*",
+    "*/__init__.py",
+    ".gitignore",
+    "*/.gitignore",
+    "main.py",
+]
+source = ["src"]
+command_line = "-m unittest discover -s src/tests -t src"
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+fail_under = 90
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+    "if self\\.debug",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if 0:",
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+]
+ignore_errors = true
+
+[tool.coverage.html]
+directory = "coverage_html_report"
