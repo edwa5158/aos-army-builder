@@ -1,5 +1,4 @@
-from src.roster.app import StopwatchApp
+from src.ui.stopwatch import StopwatchApp
 
 if __name__ == "__main__":
-    app = StopwatchApp()
-    app.run()
+    StopwatchApp().run()
