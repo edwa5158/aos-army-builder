@@ -2,6 +2,7 @@ from time import monotonic
 
 from textual.app import App, ComposeResult
 from textual.containers import HorizontalGroup, VerticalScroll
+from textual.events import Timer
 from textual.reactive import reactive
 from textual.widgets import Button, Digits, Footer, Header
 
@@ -19,7 +20,7 @@ class TimeDisplay(Digits):
 
     def on_mount(self) -> None:
         """Event handler called when widget is added to the app."""
-        self.update_timer = self.set_interval(
+        self.update_timer: Timer = self.set_interval(
             interval=1 / 60, callback=self.update_time, pause=True
         )
         # calls the function `update_time` 60 times per second
