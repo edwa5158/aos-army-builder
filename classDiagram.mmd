@@ -1,0 +1,140 @@
+---
+// [MermaidChart: 9b607d5c-ee46-4ad4-b342-656ad2091af4]
+// [MermaidChart: 9b607d5c-ee46-4ad4-b342-656ad2091af4]
+title: Animal example
+---
+classDiagram
+    class RollResult {
+        -int _num_sides
+        -int _num_dice
+        -list~int~ _results
+        -Counter _counter
+        +results: list~int~
+        +counts() dict~int,int~
+        +sum() int
+        +count_n_plus(n: int) int
+    }
+
+    class Dice {
+        +int num_dice
+        +int num_sides
+        +RollResult roll_result
+        +roll_all() RollResult
+        -_roll_one() int
+    }
+
+    class D3 {
+        +roll() int
+    }
+
+    class D6 {
+        +roll() int
+    }
+
+    class Amount {
+        +int const
+        +Dice dice
+    }
+
+    class Effect {
+        +str desc
+        +Dice dice
+        +str timing
+    }
+
+    class Timing {
+        <<enumeration>>
+        PASSIVE
+        ANY_HERO_PHASE
+        ENEMY_HERO_PHASE
+        YOUR_HERO_PHASE
+        ANY_MOVEMENT_PHASE
+        ENEMY_MOVEMENT_PHASE
+        YOUR_MOVEMENT_PHASE
+        ANY_SHOOTING_PHASE
+        ENEMY_SHOOTING_PHASE
+        YOUR_SHOOTING_PHASE
+        ANY_CHARGE_PHASE
+        ENEMY_CHARGE_PHASE
+        YOUR_CHARGE_PHASE
+        ANY_COMBAT_PHASE
+        ENEMY_COMBAT_PHASE
+        YOUR_COMBAT_PHASE
+    }
+
+    class Keywords {
+        <<enumeration>>
+        CHAMPION
+        MUSICIAN
+        STANDARD_BEARER
+        INFANTRY
+        CHAOS
+        SKAVEN
+        VERMINUS
+    }
+
+    class Ability {
+        +str name
+        +str desc
+        +Effect effect
+        +Timing timing
+        +list~Keywords~ keywords
+    }
+
+    class Tag {
+        <<dataclass>>
+        +str tag
+    }
+
+    class WeaponType {
+        <<enumeration>>
+        MELEE
+        RANGED
+    }
+
+    class WeaponProfile {
+        <<dataclass>>
+        +str name
+        +list~Tag~ tags
+        +int attack
+        +int hit
+        +int wound
+        +int rend
+        +int damage
+        +WeaponType weapon_type
+        +int range
+    }
+
+    class BattleProfile {
+        +int unit_size
+        +int points
+        +bool can_be_reinforced
+        +str base_size
+    }
+
+    class Unit {
+        +str name
+        +int num_models
+        +int move
+        +int save
+        +int control
+        +int health
+        +list~WeaponProfile~ weapon_profiles
+        +str url
+        +list~Ability~ abilities
+        +list~Keywords~ keywords
+    }
+
+    Dice *-- RollResult : owns
+    Amount o-- Dice : optional
+    Effect o-- Dice : optional
+    Ability *-- Effect
+    Ability --> Timing
+    Ability --> Keywords
+    WeaponProfile *-- Tag
+    WeaponProfile --> WeaponType
+    Unit *-- WeaponProfile
+    Unit *-- Ability
+    Unit --> Keywords
+    D3 ..> Dice : uses
+    D6 ..> Dice : uses

@@ -1,106 +1,40 @@
-from collections import Counter
+from __future__ import annotations
+
+import json
 from enum import Enum
-from operator import itemgetter
-from random import randint
 
 from attr import dataclass
 
-
-class RollResult:
-    def __init__(self, num_sides: int, num_dice: int):
-        self._num_sides: int = num_sides
-        self._num_dice: int = num_dice
-        self._results: list[int] = []
-        self._counter: Counter = Counter()
-
-    @property
-    def results(self) -> list[int]:
-        return self._results
-
-    @results.setter
-    def results(self, new_results: list[int]) -> None:
-        self._results = new_results
-        self._counter = Counter(self._results)
-
-    def counts(self) -> dict[int, int]:
-        """Returns a the count of each die side rolled, sorted by die side as key"""
-        return dict(sorted(self._counter.items(), key=itemgetter(0)))
-
-    def sum(self) -> int:
-        return sum(self._results)
-
-    def count_n_plus(self, n: int) -> int:
-        """Returns the number of dice in the result that exceed `n`"""
-        ans: int = 0
-        for key, value in self._counter.items():
-            if key >= n:
-                ans += value
-        return ans
-
-
-class Dice:
-    def __init__(self, num_dice: int = 0, num_sides: int = 6):
-        self.num_dice: int = num_dice
-        self.num_sides: int = num_sides
-        self.roll_result: RollResult = RollResult(self.num_sides, self.num_dice)
-
-    def roll_all(self) -> RollResult:
-        result: list[int] = []
-        for i in range(self.num_dice):
-            result.append(self._roll_one())
-        self.roll_result.results = result
-        return self.roll_result
-
-    def _roll_one(self) -> int:
-        return randint(1, self.num_sides)
-
-
-class D3:
-    def roll(self) -> int:
-        return Dice(1, 3)._roll_one()
-
-
-class D6:
-    def roll(self) -> int:
-        return Dice(1, 6)._roll_one()
-
-
-class Amount:
-    def __init__(self, const: int = 0, dice: Dice | None = None):
-        self.const: int = const
-        self.dice: Dice | None = dice
+from constants import Keywords, Timing
+from dice import Dice
 
 
 class Effect:
     def __init__(self, desc: str, dice: Dice | None = None):
         self.desc: str = desc
         self.dice: Dice | None = dice
-        self.timing: str
+        self.timing: Timing = None  # type: ignore
 
+    def to_json(self) -> str:
+        result: dict = {
+            "desc": self.desc,
+            "dice": self.dice.to_json() if self.dice else None,
+            "timing": self.timing.to_json() if self.timing else None,
+        }
 
-class Timing(Enum):
-    PASSIVE = "Passive"
+        return json.dumps(result)
 
-    ANY_HERO_PHASE = "Any Hero Phase"
-    ENEMY_HERO_PHASE = "Enemy Hero Phase"
-    YOUR_HERO_PHASE = "Your Hero Phase"
-
-    ANY_MOVEMENT_PHASE = "Any Movement Phase"
-    ENEMY_MOVEMENT_PHASE = "Enemy Movement Phase"
-    YOUR_MOVEMENT_PHASE = "Your Movement Phase"
-
-    ANY_SHOOTING_PHASE = "Any Shooting Phase"
-    ENEMY_SHOOTING_PHASE = "Enemy Shooting Phase"
-    YOUR_SHOOTING_PHASE = "Your Shooting Phase"
-
-    ANY_CHARGE_PHASE = "Any Charge Phase"
-    ENEMY_CHARGE_PHASE = "Enemy Charge Phase"
-    YOUR_CHARGE_PHASE = "Your Charge Phase"
-
-    ANY_COMBAT_PHASE = "Any Combat Phase"
-    ENEMY_COMBAT_PHASE = "Enemy Combat Phase"
-    YOUR_COMBAT_PHASE = "Your Combat Phase"
-    
+    @staticmethod
+    def from_json(effect_json: str) -> Effect:
+        input: dict = json.loads(effect_json)
+        d: str | None = input.get("dice", None)
+        t: str | None = input.get("timing", None)
+        e = Effect(input.get("desc"))
+        if d:
+            e.dice = Dice.from_json(d)
+        if t:
+            e.timing = Timing.from_json(t)
+        return e
 
 
 class Ability:
@@ -108,11 +42,13 @@ class Ability:
         self.name: str = name
         self.desc: str
         self.effect: Effect
+        self.timing: Timing
+        self.keywords: list[Keywords]
 
 
 @dataclass
 class Tag:
-    name: str
+    tag: str
 
 
 class WeaponType(Enum):
@@ -133,6 +69,16 @@ class WeaponProfile:
     range: int
 
 
+class BattleProfile:
+    def __init__(
+        self, unit_size: int, points: int, can_be_reinforced: bool, base_size: str = ""
+    ):
+        self.unit_size: int = unit_size
+        self.points: int = points
+        self.can_be_reinforced: bool = can_be_reinforced
+        self.base_size: str = base_size
+
+
 class Unit:
     def __init__(self, name):
         self.name: str = name
@@ -144,3 +90,66 @@ class Unit:
         self.weapon_profiles: list[WeaponProfile]
         self.url: str
         self.abilities: list[Ability] = []
+        self.keywords: list[Keywords] = []
+        self.battle_profile: BattleProfile
+        self._is_reinforced: bool = False
+        self._points: int = 0
+
+    @property
+    def is_hero(self) -> bool:
+        return Keywords.HERO in self.keywords
+
+    @property
+    def is_reinforced(self) -> bool:
+        return self._is_reinforced
+
+    @is_reinforced.setter
+    def is_reinforced(self, value: bool) -> None:
+        if not isinstance(value, bool):
+            raise ValueError()
+        if not value:
+            self._is_reinforced = value
+        elif self.battle_profile.can_be_reinforced:
+            self._is_reinforced = value
+        else:
+            raise ValueError(f"cannot reinforce {self.name}; it's not reinforceable")
+
+    @property
+    def points(self) -> int:
+        if self._is_reinforced:
+            self._points = self.battle_profile.points * 2
+        else:
+            self._points = self.battle_profile.points
+        return self._points
+
+
+class Regiment:
+    def __init__(self):
+        self.units: list[Unit] = []
+        self.is_valid: bool = False
+        self.is_general_unit: bool = False
+        self.has_hero: bool = False
+        self.points_total: int = 0
+
+    def add_unit(self, unit: Unit) -> None:
+        self.units.append(unit)
+        self.has_hero = self.has_hero or unit.is_hero
+        self.points_total += unit.points
+
+    @property
+    def max_units(self) -> int:
+        return 4 if self.is_general_unit else 3
+
+    def validate(self) -> bool:
+        r: bool = True
+        r &= self.has_hero
+        return r
+
+
+class ArmyRoster:
+    def __init__(self):
+        self.name: str
+        self.regiments: list[Regiment]
+
+    def add_regiment(self, regiment: Regiment) -> None:
+        self.regiments.append(regiment)
