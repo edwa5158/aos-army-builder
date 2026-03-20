@@ -4,9 +4,7 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = [
-    "textual[syntax]>=8.0.0",
-]
+dependencies = ["textual[syntax]>=8.0.0"]
 
 [dependency-groups]
 dev = [
@@ -16,40 +14,38 @@ dev = [
     "textual-dev>=1.8.0",
     "ty>=0.0.18",
 ]
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = """
+--cov=army
+--cov-report=term-missing
+--cov-report=html:.cache/coverage/html
+--cov-config=pyproject.toml
+"""
+cache_dir = ".cache/pytest"
 
-# [tool.coverage.run]
-# branch = true
-# omit = [
-#     "*/tests/*",
-#     "*/test_*.py",
-#     "*/.venv/*",
-#     "*/__init__.py",
-#     ".gitignore",
-#     "*/.gitignore",
-#     "main.py",
-# ]
-# source = ["src"]
-# command_line = "-m unittest discover -s src/tests -t src"
-# [tool.coverage.report]
-# # Regexes for lines to exclude from consideration
-# fail_under = 90
-# exclude_also = [
-#     # Don't complain about missing debug-only code:
-#     "def __repr__",
-#     "if self\\.debug",
+[tool.coverage.run]
+branch = true
+source = ["src/army"]
+omit = []
+data_file = ".cache/coverage/coverage.db"
 
-#     # Don't complain if tests don't hit defensive assertion code:
-#     "raise AssertionError",
-#     "raise NotImplementedError",
+[tool.coverage.report]
+fail_under = 90
+exclude_also = [
+    "def __repr__",
+    "if self\\.debug",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "@(abc\\.)?abstractmethod",
+]
+ignore_errors = true
 
-#     # Don't complain if non-runnable code isn't run:
-#     "if 0:",
-#     "if __name__ == .__main__.:",
+[tool.coverage.html]
+directory = ".cache/coverage/html"
 
-#     # Don't complain about abstract methods, they aren't run:
-#     "@(abc\\.)?abstractmethod",
-# ]
-# ignore_errors = true
-
-# [tool.coverage.html]
-# directory = "coverage_html_report"
+[tool.ruff]
+cache-dir = ".cache/ruff"
