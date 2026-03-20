@@ -5,15 +5,17 @@ from enum import Enum
 
 from attr import dataclass
 
-from constants import Keywords, Timing
-from dice import Dice
+from army.constants import Keywords, Timing
+from dice.dice import Dice
 
 
 class Effect:
-    def __init__(self, desc: str, dice: Dice | None = None):
+    def __init__(
+        self, desc: str, timing: Timing | None = None, dice: Dice | None = None
+    ):
         self.desc: str = desc
         self.dice: Dice | None = dice
-        self.timing: Timing = None  # type: ignore
+        self.timing: Timing | None = timing
 
     def to_json(self) -> str:
         result: dict = {
@@ -29,7 +31,7 @@ class Effect:
         input: dict = json.loads(effect_json)
         d: str | None = input.get("dice", None)
         t: str | None = input.get("timing", None)
-        e = Effect(input.get("desc"))
+        e = Effect(input.get("desc", ""))
         if d:
             e.dice = Dice.from_json(d)
         if t:

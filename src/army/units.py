@@ -1,4 +1,4 @@
-from data_model import (
+from army.data_model import (
     Ability,
     BattleProfile,
     Effect,

@@ -58,3 +58,12 @@ class Keywords(Enum):
     SKAVEN = "Skaven"
     VERMINUS = "Verminus"
     MASTERCLAN = "Masterclan"
+
+    def to_json(self) -> str:
+        result: dict[str, str] = {"name": self.name, "value": self.value}
+        return json.dumps(result)
+
+    @staticmethod
+    def from_json(timing_json: str) -> Keywords:
+        input: dict = json.loads(timing_json)
+        return Keywords(input.get("value"))

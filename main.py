@@ -1,6 +1,6 @@
 import pickle
 
-from units import crit_auto_wound
+from army.units import crit_auto_wound
 
 
 def main():
