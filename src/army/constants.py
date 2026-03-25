@@ -1,10 +1,30 @@
 from __future__ import annotations
 
-import json
-from enum import Enum
+from enum import StrEnum
+from typing import TypedDict
 
 
-class Timing(Enum):
+class KeywordDict(TypedDict):
+    """A TypedDict used by Keyword.from_json and Keyword.to_json
+
+    Attributes:
+        value (_str_): The value of the Keyword
+    """
+
+    keyword: str
+
+
+class TimingDict(TypedDict):
+    """A TypedDict used by Timing.from_json and Timing.to_json
+
+    Attributes:
+        value (_str_): The value of the Timing
+    """
+
+    timing: str
+
+
+class Timing(StrEnum):
     PASSIVE = "Passive"
 
     ANY_HERO_PHASE = "Any Hero Phase"
@@ -27,17 +47,17 @@ class Timing(Enum):
     ENEMY_COMBAT_PHASE = "Enemy Combat Phase"
     YOUR_COMBAT_PHASE = "Your Combat Phase"
 
-    def to_json(self) -> str:
-        result: dict[str, str] = {"name": self.name, "value": self.value}
-        return json.dumps(result)
+    def to_json(self) -> TimingDict:
+        """returns a dictionary like `{"value": Timing.value}`"""
+        return {"timing": self.value}
 
-    @staticmethod
-    def from_json(timing_json: str) -> Timing:
-        input: dict = json.loads(timing_json)
-        return Timing(input.get("value"))
+    @classmethod
+    def from_json(cls, data: TimingDict) -> Timing:
+        """`data` is a dictionary like `{"value": Timing.value}`"""
+        return Timing(data["timing"])
 
 
-class Keywords(Enum):
+class Keyword(StrEnum):
     CHAMPION = "Champion"
     MUSICIAN = "Musician"
     STANDARD_BEARER = "Standard Bearer"
@@ -59,11 +79,48 @@ class Keywords(Enum):
     VERMINUS = "Verminus"
     MASTERCLAN = "Masterclan"
 
-    def to_json(self) -> str:
-        result: dict[str, str] = {"name": self.name, "value": self.value}
-        return json.dumps(result)
+    def to_json(self) -> KeywordDict:
+        """returns a dictionary like `{"value": Keyword.value}`"""
+        return {"keyword": self.value}
 
-    @staticmethod
-    def from_json(timing_json: str) -> Keywords:
-        input: dict = json.loads(timing_json)
-        return Keywords(input.get("value"))
+    @classmethod
+    def from_json(cls, data: KeywordDict) -> Keyword:
+        """`data` is a dictionary like `{"value": Keyword.value}`"""
+        return Keyword(data["keyword"])
+
+
+class KeywordsDict(TypedDict):
+    """A TypedDict used by Keywords.from_json and Keywords.to_json
+
+    Attributes:
+        keywords (_list[KeywordDict]_): A list of KeywordDict
+    """
+
+    keywords: list[KeywordDict]
+
+
+class Keywords:
+    def __init__(self, keywords: list[Keyword]):
+        self.keywords: list[Keyword] = keywords
+
+    def __contains__(self, keyword: Keyword):
+        return keyword in self.keywords
+
+    def to_json(self) -> KeywordsDict:
+        """Returns a dictionary `{"keywords": [{"keyword": Keyword.value}, ...}`"""
+        result: list[KeywordDict] = [kw.to_json() for kw in self.keywords]
+        return {"keywords": result}
+
+    @classmethod
+    def from_json(cls, data: KeywordsDict) -> Keywords:
+        """`data` is a dictionary `{"keywords": [{"keyword": Keyword.value}, ...}`"""
+
+        input: list[KeywordDict] | None = data.get("keywords", None)
+        if not input:
+            return Keywords([])
+
+        keyword_list: list[Keyword] = [Keyword.from_json(kw) for kw in input]
+        return Keywords(keyword_list)
+
+    def __eq__(self, other):
+        return self.keywords == other.keywords

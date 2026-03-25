@@ -8,6 +8,7 @@ dependencies = ["textual[syntax]>=8.0.0"]
 
 [dependency-groups]
 dev = [
+    "pyrefly>=0.57.1",
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
     "ruff>=0.15.2",

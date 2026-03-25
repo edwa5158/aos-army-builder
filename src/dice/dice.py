@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import json.decoder
 from collections import Counter
 from operator import itemgetter
 from random import randint
+from typing import TypedDict
 
 
 class RollResult:
@@ -39,20 +39,24 @@ class RollResult:
                 ans += value
         return ans
 
-    def to_json(self) -> str:
+    def to_json(self) -> dict:
         result: dict = {
             "num_sides": self._num_sides,
             "num_dice": self._num_dice,
             "results": self._rolls,
         }
-        return json.dumps(result)
-
-    @staticmethod
-    def from_json(result_json: str) -> RollResult:
-        input: dict = json.loads(result_json)
-        result = RollResult(input.get("num_sides", 0), input.get("num_dice", 0))
-        result._rolls = input.get("_results", [])
         return result
+
+    @classmethod
+    def from_json(cls, data: dict) -> RollResult:
+        result = RollResult(data.get("num_sides", 0), data.get("num_dice", 0))
+        result._rolls = data.get("_results", [])
+        return result
+
+
+class DiceDict(TypedDict):
+    num_dice: int
+    num_sides: int
 
 
 class Dice:
@@ -75,14 +79,12 @@ class Dice:
     def _roll_one(self) -> int:
         return randint(1, self.num_sides)
 
-    def to_json(self) -> str:
-        result: dict = {"num_dice": self.num_dice, "num_sides": self.num_sides}
-        return json.dumps(result)
+    def to_json(self) -> DiceDict:
+        return {"num_dice": self.num_dice, "num_sides": self.num_sides}
 
-    @staticmethod
-    def from_json(dice_json: str) -> Dice:
-        input: dict = json.loads(dice_json)
-        return Dice(input.get("num_dice", 0), input.get("num_sides", 0))
+    @classmethod
+    def from_json(cls, data: DiceDict) -> Dice:
+        return Dice(data.get("num_dice", 0), data.get("num_sides", 0))
 
 
 class D3:
@@ -100,18 +102,16 @@ class Amount:
         self.const: int = const
         self.dice: Dice | None = dice
 
-    def to_json(self) -> str:
+    def to_json(self) -> dict:
         result: dict = {
             "const": self.const,
-            "dice": self.dice.to_json() if self.dice else "",
+            "dice": self.dice.to_json() if self.dice else {},
         }
-        return json.dumps(result)
+        return result
 
-    @staticmethod
-    def from_json(amount_json: str) -> Amount:
-        input: dict = json.loads(amount_json)
-        result = Amount(input.get("const", 0))
-        d: str | None = input.get("dice", None)
-        if d:
-            result.dice = Dice.from_json(d)
+    @classmethod
+    def from_json(cls, data: dict) -> Amount:
+        result = Amount(data.get("const", 0))
+        d: DiceDict = data.get("dice", {})
+        result.dice = Dice.from_json(d)
         return result

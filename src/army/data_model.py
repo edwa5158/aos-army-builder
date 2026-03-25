@@ -1,74 +1,209 @@
 from __future__ import annotations
 
-import json
-from enum import Enum
+from enum import StrEnum
+from typing import NotRequired, TypedDict
 
-from attr import dataclass
+from army.constants import Keyword, Keywords, KeywordsDict, Timing, TimingDict
+from dice.dice import Dice, DiceDict
 
-from army.constants import Keywords, Timing
-from dice.dice import Dice
+
+class EffectDict(TypedDict):
+    """
+    Attributes:
+        desc (_str_): _Effect description_
+        timing (_TimingDict_): _The effect timing_
+        dice (_Optional DiceDict_): _Any Dice associated with the effect_
+    """
+
+    desc: str
+    timing: TimingDict
+    dice: NotRequired[DiceDict]
 
 
 class Effect:
-    def __init__(
-        self, desc: str, timing: Timing | None = None, dice: Dice | None = None
-    ):
+    def __init__(self, desc: str, timing: Timing, dice: Dice | None = None):
         self.desc: str = desc
+        self.timing: Timing = timing
         self.dice: Dice | None = dice
-        self.timing: Timing | None = timing
 
-    def to_json(self) -> str:
-        result: dict = {
-            "desc": self.desc,
-            "dice": self.dice.to_json() if self.dice else None,
-            "timing": self.timing.to_json() if self.timing else None,
-        }
+    def to_json(self) -> EffectDict:
+        result: EffectDict = {"desc": self.desc, "timing": self.timing.to_json()}
+        if self.dice:
+            result["dice"] = self.dice.to_json()
+        return result
 
-        return json.dumps(result)
+    @classmethod
+    def from_json(cls, data: EffectDict, version: int = 0) -> Effect:
+        return Effect(
+            desc=data["desc"],
+            timing=Timing.from_json(data["timing"]),
+            dice=Dice.from_json(data.get("dice")) if data.get("dice") else None,
+        )
 
-    @staticmethod
-    def from_json(effect_json: str) -> Effect:
-        input: dict = json.loads(effect_json)
-        d: str | None = input.get("dice", None)
-        t: str | None = input.get("timing", None)
-        e = Effect(input.get("desc", ""))
-        if d:
-            e.dice = Dice.from_json(d)
-        if t:
-            e.timing = Timing.from_json(t)
-        return e
+    def __eq__(self, other):
+        return (
+            self.desc == other.desc
+            and self.timing == other.timing
+            and self.dice == other.dice
+        )
+
+
+class AbilityDict(TypedDict):
+    name: str
+    desc: str
+    effect: EffectDict
+    timing: TimingDict
+    keywords: KeywordsDict
 
 
 class Ability:
-    def __init__(self, name: str):
+    def __init__(
+        self,
+        name: str,
+        desc: str,
+        effect: Effect,
+        timing: Timing,
+        keywords: Keywords,
+    ):
         self.name: str = name
-        self.desc: str
-        self.effect: Effect
-        self.timing: Timing
-        self.keywords: list[Keywords]
+        self.desc: str = desc
+        self.effect: Effect = effect
+        self.timing: Timing = timing
+        self.keywords: Keywords = keywords
+
+    def to_json(self) -> AbilityDict:
+        return {
+            "name": self.name,
+            "desc": self.desc,
+            "effect": self.effect.to_json(),
+            "timing": self.timing.to_json(),
+            "keywords": self.keywords.to_json(),
+        }
+
+    @classmethod
+    def from_json(cls, data: AbilityDict) -> Ability:
+        return Ability(
+            name=data["name"],
+            desc=data["desc"],
+            effect=Effect.from_json(data["effect"]),
+            timing=Timing.from_json(data["timing"]),
+            keywords=Keywords.from_json(data["keywords"]),
+        )
+
+    def __eq__(self, other):
+        return (
+            self.name == other.name
+            and self.desc == other.desc
+            and self.effect == other.effect
+            and self.timing == other.timing
+            and self.keywords == other.keywords
+        )
 
 
-@dataclass
-class Tag:
-    tag: str
+class WeaponTypeDict(TypedDict):
+    weapon_type: "str"
 
 
-class WeaponType(Enum):
+class WeaponType(StrEnum):
     MELEE = "melee"
     RANGED = "ranged"
 
+    def to_json(self) -> WeaponTypeDict:
+        return {"weapon_type": self.value}
 
-@dataclass
-class WeaponProfile:
+    @classmethod
+    def from_json(cls, data: WeaponTypeDict) -> WeaponType:
+        return WeaponType(data["weapon_type"])
+
+
+class WeaponProfileDict(TypedDict):
     name: str
-    tags: list[Tag]
+    tags: list[str]
     attack: int
     hit: int
     wound: int
     rend: int
     damage: int
-    weapon_type: WeaponType
-    range: int
+    weapon_type: WeaponTypeDict
+    range: str
+
+
+class WeaponProfile:
+    """
+    Attributes:
+        name (_str_): _description_
+        tags (_list[str]_): _description_
+        attack (_int_): _description_
+        hit (_int_): _description_
+        wound (_int_): _description_
+        rend (_int_): _description_
+        damage (_int_): _description_
+        weapon_type (_WeaponType_): _description_
+        range (_str_): _description_
+    """
+
+    def __init__(
+        self,
+        name: str,
+        tags: list[str],
+        attack: int,
+        hit: int,
+        wound: int,
+        rend: int,
+        damage: int,
+        weapon_type: WeaponType,
+        range: str,
+    ):
+        self.name: str = name
+        self.tags: list[str] = tags
+        self.attack: int = attack
+        self.hit: int = hit
+        self.wound: int = wound
+        self.rend: int = rend
+        self.damage: int = damage
+        self.weapon_type: WeaponType = weapon_type
+        self.range: str = range
+
+    def to_json(self) -> WeaponProfileDict:
+        result: WeaponProfileDict = {
+            "name": self.name,
+            "tags": self.tags,
+            "attack": self.attack,
+            "hit": self.hit,
+            "wound": self.wound,
+            "rend": self.rend,
+            "damage": self.damage,
+            "weapon_type": self.weapon_type.to_json(),
+            "range": self.range,
+        }
+        return result
+
+    @classmethod
+    def from_json(cls, data: WeaponProfileDict) -> WeaponProfile:
+        return WeaponProfile(
+            data["name"],
+            data["tags"],
+            data["attack"],
+            data["hit"],
+            data["wound"],
+            data["rend"],
+            data["damage"],
+            WeaponType.from_json(data["weapon_type"]),
+            data["range"],
+        )
+
+    def __eq__(self, other):
+        return (
+            self.name == other.name
+            and self.tags == other.tags
+            and self.attack == other.attack
+            and self.hit == other.hit
+            and self.wound == other.wound
+            and self.rend == other.rend
+            and self.damage == other.damage
+            and self.weapon_type == other.weapon_type
+            and self.range == other.range
+        )
 
 
 class BattleProfile:
@@ -92,14 +227,14 @@ class Unit:
         self.weapon_profiles: list[WeaponProfile]
         self.url: str
         self.abilities: list[Ability] = []
-        self.keywords: list[Keywords] = []
+        self.keywords: Keywords
         self.battle_profile: BattleProfile
         self._is_reinforced: bool = False
         self._points: int = 0
 
     @property
     def is_hero(self) -> bool:
-        return Keywords.HERO in self.keywords
+        return Keyword.HERO in self.keywords
 
     @property
     def is_reinforced(self) -> bool:
