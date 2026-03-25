@@ -1,5 +1,5 @@
 from army.constants import Keyword, Keywords, Timing
-from army.data_model import Ability, Effect, WeaponProfile, WeaponType
+from army.data_model import Ability, BattleProfile, Effect, WeaponProfile, WeaponType
 from dice.dice import Dice
 
 d = Dice(4, 6)
@@ -32,6 +32,7 @@ def test_Ability_json():
     a2 = Ability.from_json(a_json)
     assert a == a2
 
+
 def test_WeaponType_json():
     melee = WeaponType.MELEE
     melee_json = melee.to_json()
@@ -47,3 +48,11 @@ def test_WeaponProfile_json():
     wp_json = wp.to_json()
     wp2 = WeaponProfile.from_json(wp_json)
     assert wp == wp2
+
+
+def test_BattleProfile_json():
+    bf = BattleProfile(20, 150, True, "25mm")
+
+    bf_json = bf.to_json()
+    bf2 = BattleProfile.from_json(bf_json)
+    assert bf == bf2

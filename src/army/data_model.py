@@ -206,6 +206,13 @@ class WeaponProfile:
         )
 
 
+class BattleProfileDict(TypedDict):
+    unit_size: int
+    points: int
+    can_be_reinforced: bool
+    base_size: str
+
+
 class BattleProfile:
     def __init__(
         self, unit_size: int, points: int, can_be_reinforced: bool, base_size: str = ""
@@ -215,20 +222,75 @@ class BattleProfile:
         self.can_be_reinforced: bool = can_be_reinforced
         self.base_size: str = base_size
 
+    def __eq__(self, other):
+        return (
+            self.unit_size == other.unit_size
+            and self.points == other.points
+            and self.can_be_reinforced == other.can_be_reinforced
+            and self.base_size == other.base_size
+        )
+
+    def to_json(self) -> BattleProfileDict:
+        result: BattleProfileDict = {
+            "unit_size": self.unit_size,
+            "points": self.points,
+            "can_be_reinforced": self.can_be_reinforced,
+            "base_size": self.base_size,
+        }
+        return result
+
+    @classmethod
+    def from_json(self, data: BattleProfileDict) -> BattleProfile:
+        return BattleProfile(
+            data["unit_size"],
+            data["points"],
+            data["can_be_reinforced"],
+            data["base_size"],
+        )
+
+
+class UnitDict(TypedDict):
+    name: str
+    num_models: int
+    move: int
+    save: int
+    control: int
+    health: int
+    weapon_profiles: list[WeaponProfileDict]
+    url: str
+    abilities: list[AbilityDict]
+    keywords: KeywordsDict
+    battle_profile: BattleProfileDict
+    _is_reinforced: bool
+    _points: int
+
 
 class Unit:
-    def __init__(self, name):
+    def __init__(
+        self,
+        name: str,
+        num_models: int,
+        move: int,
+        save: int,
+        control: int,
+        health: int,
+        weapon_profiles: list[WeaponProfile],
+        url: str,
+        abilities: list[Ability],
+        keywords: Keywords,
+        battle_profile: BattleProfile,
+    ):
         self.name: str = name
-        self.num_models: int
-        self.move: int
-        self.save: int
-        self.control: int
-        self.health: int
-        self.weapon_profiles: list[WeaponProfile]
-        self.url: str
-        self.abilities: list[Ability] = []
-        self.keywords: Keywords
-        self.battle_profile: BattleProfile
+        self.num_models: int = num_models
+        self.move: int = move
+        self.save: int = save
+        self.control: int = control
+        self.health: int = health
+        self.weapon_profiles: list[WeaponProfile] = weapon_profiles
+        self.url: str = url
+        self.abilities: list[Ability] = abilities
+        self.keywords: Keywords = keywords
+        self.battle_profile: BattleProfile = battle_profile
         self._is_reinforced: bool = False
         self._points: int = 0
 
@@ -258,6 +320,43 @@ class Unit:
         else:
             self._points = self.battle_profile.points
         return self._points
+
+    def to_json(self) -> UnitDict:
+        result: UnitDict = {
+            "name": self.name,
+            "num_models": self.num_models,
+            "move": self.move,
+            "save": self.save,
+            "control": self.control,
+            "health": self.health,
+            "weapon_profiles": [wp.to_json() for wp in self.weapon_profiles],
+            "url": self.url,
+            "abilities": [ability.to_json() for ability in self.abilities],
+            "keywords": self.keywords.to_json(),
+            "battle_profile": self.battle_profile.to_json(),
+            "_is_reinforced": self._is_reinforced,
+            "_points": self._points,
+        }
+        return result
+
+    @classmethod
+    def from_json(cls, data: UnitDict) -> Unit:
+        unit = Unit(
+            data["name"],
+            data["num_models"],
+            data["move"],
+            data["save"],
+            data["control"],
+            data["health"],
+            [WeaponProfile.from_json(wp) for wp in data["weapon_profiles"]],
+            data["url"],
+            [Ability.from_json(ability) for ability in data["abilities"]],
+            Keywords.from_json(data["keywords"]),
+            BattleProfile.from_json(data["battle_profile"]),
+        )
+        unit._is_reinforced = data["_is_reinforced"]
+        unit._points = data["_points"]
+        return unit
 
 
 class Regiment:
