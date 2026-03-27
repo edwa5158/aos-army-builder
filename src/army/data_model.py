@@ -20,6 +20,7 @@ class EffectDict(TypedDict):
     dice: NotRequired[DiceDict]
 
 
+# TODO : Remove Timing and Dice from Effect....possibly add Target (of the effect)
 class Effect:
     def __init__(self, desc: str, timing: Timing, dice: Dice | None = None):
         self.desc: str = desc
@@ -265,6 +266,8 @@ class UnitDict(TypedDict):
     _points: int
 
 
+# TODO: Update this to be a Warscroll class, which is the generic representation of the rules
+# TODO: Create a new class called "Unit" which represents a specific implementation of the Warscroll in an army
 class Unit:
     def __init__(
         self,
@@ -358,6 +361,23 @@ class Unit:
         unit._points = data["_points"]
         return unit
 
+    def __eq__(self, other):
+        return (
+            self.name == other.name
+            and self.num_models == other.num_models
+            and self.move == other.move
+            and self.save == other.save
+            and self.control == other.control
+            and self.health == other.health
+            and self.weapon_profiles == other.weapon_profiles
+            and self.url == other.url
+            and self.abilities == other.abilities
+            and self.keywords == other.keywords
+            and self.battle_profile == other.battle_profile
+            and self._is_reinforced == other._is_reinforced
+            and self._points == other._points
+        )
+
 
 class Regiment:
     def __init__(self):
@@ -380,6 +400,15 @@ class Regiment:
         r: bool = True
         r &= self.has_hero
         return r
+
+    def __eq__(self, other):
+        return (
+            self.units == other.units
+            and self.is_valid == other.is_valid
+            and self.is_general_unit == other.is_general_unit
+            and self.has_hero == other.has_hero
+            and self.points_total == other.points_total
+        )
 
 
 class ArmyRoster:

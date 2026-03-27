@@ -47,6 +47,8 @@ class Timing(StrEnum):
     ENEMY_COMBAT_PHASE = "Enemy Combat Phase"
     YOUR_COMBAT_PHASE = "Your Combat Phase"
 
+    END_OF_ANY_TURN = "End of Any Turn"
+
     def to_json(self) -> TimingDict:
         """returns a dictionary like `{"value": Timing.value}`"""
         return {"timing": self.value}
