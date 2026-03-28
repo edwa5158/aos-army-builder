@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=edwa5158_aos-army-builder&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=edwa5158_aos-army-builder)
+
 # README
 I'm building a **modular Age of Sigmar toolkit**.
 
