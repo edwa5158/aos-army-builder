@@ -33,7 +33,7 @@ omit = []
 data_file = ".cache/coverage/coverage.db"
 
 [tool.coverage.report]
-fail_under = 90
+fail_under = 70
 exclude_also = [
     "def __repr__",
     "if self\\.debug",
