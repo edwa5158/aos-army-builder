@@ -22,7 +22,7 @@ addopts = """
 --cov=src
 --cov-report=term-missing
 --cov-report=html:.cache/coverage/html
---cov-report=xml:.cache/coverage/coverage.xml
+--cov-report=xml:coverage.xml
 --cov-config=pyproject.toml
 """
 cache_dir = ".cache/pytest"
