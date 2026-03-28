@@ -2,10 +2,9 @@ import os
 import os.path
 from pathlib import Path
 
-from army.constants import Keyword, Keywords, Timing
+from army.constants import Keyword, Keywords
 from army.data_model import Effect
 from army.serialization import save_config
-from dice.dice import Dice
 
 
 def test_save_config_keywords() -> None:
