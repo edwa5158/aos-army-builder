@@ -9,4 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
-.cache/
+.cache/ruff/
+.cache/pytest/
+.cache/serialization_files/
+
+.vscode/
