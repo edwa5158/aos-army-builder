@@ -157,4 +157,5 @@ def test_unit_reinforced():
 def test_regiment_equals():
     r = Regiment()
     r.add_unit(clanrats())
-    assert r == r
+    r2 = r
+    assert r == r2

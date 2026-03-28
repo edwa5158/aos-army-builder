@@ -19,7 +19,7 @@ dev = [
 pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = """
---cov=army
+--cov=src
 --cov-report=term-missing
 --cov-report=html:.cache/coverage/html
 --cov-config=pyproject.toml
@@ -28,7 +28,7 @@ cache_dir = ".cache/pytest"
 
 [tool.coverage.run]
 branch = true
-source = ["src/army"]
+source = ["src"]
 omit = []
 data_file = ".cache/coverage/coverage.db"
 
