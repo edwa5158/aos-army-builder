@@ -1,2 +1,3 @@
 # Ignore coverage artifact from language stats
 .cache/** linguist-generated=true
+coverage.xml linguist-generated=true
