@@ -62,3 +62,20 @@ def test_keywords_contains():
     assert keyword_list[4] in keywords
 
     assert Keyword.MASTERCLAN not in keywords
+
+def test_adding_duplicate_keyword():
+
+    keyword_list = [
+        Keyword.CHAMPION,
+        Keyword.HERO,
+        Keyword.MONSTER,
+        Keyword.MUSICIAN,
+        Keyword.SKAVEN,
+    ]
+
+    keywords = Keywords(keyword_list)
+    old_len = len(keywords)
+    keywords.add(Keyword.SKAVEN)
+    new_len = len(keywords)
+
+    assert old_len == new_len

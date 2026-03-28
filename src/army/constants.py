@@ -108,6 +108,13 @@ class Keywords:
     def __contains__(self, keyword: Keyword):
         return keyword in self.keyword_list
 
+    def __len__(self) -> int:
+        return len(self.keyword_list)
+
+    def add(self, keyword: Keyword) -> None:
+        if keyword not in self.keyword_list:
+            self.keyword_list.append(keyword)
+
     def to_json(self) -> KeywordsDict:
         """Returns a dictionary `{"keywords": [{"keyword": Keyword.value}, ...}`"""
         result: list[KeywordDict] = [kw.to_json() for kw in self.keyword_list]

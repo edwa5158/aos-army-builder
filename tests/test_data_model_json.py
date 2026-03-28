@@ -1,9 +1,10 @@
-from army.data_model import Regiment
+from army.data_model import ArmyRoster
 from army.constants import Keyword, Keywords, Timing
 from army.data_model import (
     Ability,
     BattleProfile,
     Effect,
+    Regiment,
     Warscroll,
     WeaponProfile,
     WeaponType,
@@ -154,8 +155,45 @@ def test_unit_reinforced():
     except ValueError:
         return
 
+
 def test_regiment_equals():
     r = Regiment()
     r.add_unit(clanrats())
     r2 = r
     assert r == r2
+
+
+def test_regiment_general():
+    r = Regiment()
+    r.add_unit(clanrats())
+    r.is_general_regiment = True
+
+    assert r.is_general_regiment
+
+    assert r.max_units == 4
+
+    r.is_general_regiment = False
+    assert r.max_units == 3
+
+
+def test_regiment_valid():
+    r = Regiment()
+    r.add_unit(clanrats())
+
+    assert not r.is_valid
+    u = clanrats()
+    u.keywords.add(Keyword.HERO)
+    r.add_unit(u)
+
+    assert r.is_valid
+
+def test_army_roster():
+    ar = ArmyRoster()
+    ar.name = "The Regiment"
+
+    r1 = Regiment()
+    r1.add_unit(clanrats())
+
+    ar.add_regiment(r1)
+
+    assert len(ar.regiments) == 1

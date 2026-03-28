@@ -383,7 +383,7 @@ class Warscroll:
 class Regiment:
     def __init__(self):
         self.units: list[Warscroll] = []
-        self.is_valid: bool = False
+        self._is_valid: bool = False
         self.is_general_regiment: bool = False
         self.has_hero: bool = False
         self.points_total: int = 0
@@ -397,7 +397,8 @@ class Regiment:
     def max_units(self) -> int:
         return 4 if self.is_general_regiment else 3
 
-    def validate(self) -> bool:
+    @property
+    def is_valid(self) -> bool:
         r: bool = True
         r &= self.has_hero
         return r
@@ -414,8 +415,8 @@ class Regiment:
 
 class ArmyRoster:
     def __init__(self):
-        self.name: str
-        self.regiments: list[Regiment]
+        self.name: str = ""
+        self.regiments: list[Regiment] = []
 
     def add_regiment(self, regiment: Regiment) -> None:
         self.regiments.append(regiment)

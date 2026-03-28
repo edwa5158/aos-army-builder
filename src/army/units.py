@@ -37,7 +37,6 @@ clanrats.is_reinforced = True
 seething_swarm = Ability("Seething Swarm")
 seething_swarm.effect = Effect("You can return {{D3}} slain models to this unit.")
 seething_swarm.desc = "Clanrats overwhelm their enemies with their seemingly endless numbers – biting, stabbing and trampling their own fallen beneath their bloody claws."
-# seething_swarm.effect.dice = D3()
 
 clanrats.abilities.append(seething_swarm)
 
