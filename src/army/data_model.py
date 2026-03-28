@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from enum import StrEnum
+from enum import Enum, StrEnum
 from typing import TypedDict
 
 from army.constants import Keyword, Keywords, KeywordsDict, Timing, TimingDict
@@ -78,6 +78,44 @@ class Ability:
             and self.timing == other.timing
             and self.keywords == other.keywords
         )
+
+
+class WeaponAbility(Enum):
+    ANTI_X = {
+        "name": "Anti-X (+1 Rend)",
+        "desc": "Add 1 to this weapon's Rend characteristic if the target "
+        + "has the keyword after 'Anti-' or fulfils the condition "
+        + "after 'Anti-'. Multiples of this ability are cumulative. "
+        + "For example, if a weapon has both Anti-charge (+1 Rend) "
+        + "and Anti-HERO (+1 Rend), then add 2 to the Rend characteristic "
+        + "of the weapon for attacks that target a HERO that charged "
+        + "in the same turn.",
+    }
+    CHARGE = {
+        "name": "Charge (+1 Damage)",
+        "desc": "Add 1 to this weapon's Damage characteristic if the "
+        + "attacking unit charged this turn.",
+    }
+    COMPANION = {
+        "name": "Companion",
+        "desc": "Unless otherwise specified, attacks made by this weapon are not affected by friendly abilities that modify hit rolls, wound rolls or weapon characteristics, except for those that apply negative modifiers (e.g. 'Covering Fire').",
+    }
+    CRIT_2_HITS = {
+        "name": "Crit (2 Hits)",
+        "desc": "If an attack made with this weapon scores a critical hit, that attack scores 2 hits on the target unit instead of 1. Make a wound roll for each hit.",
+    }
+    CRIT_AUTO_WOUND = {
+        "name": "Crit (Auto-wound)",
+        "desc": "If an attack made with this weapon scores a critical hit, that attack automatically wounds the target. Make a save roll as normal.",
+    }
+    CRIT_MORTAL = {
+        "name": "Crit (Mortal)",
+        "desc": "If an attack made with this weapon scores a critical hit, that attack inflicts mortal damage on the target unit equal to the Damage characteristic of that weapon and the attack sequence ends.",
+    }
+    SHOOT_IN_COMBAT = {
+        "name": "Shoot in Combat",
+        "desc": "This weapon can be used to make shooting attacks even if the attacking unit is in combat.",
+    }
 
 
 class WeaponTypeDict(TypedDict):
