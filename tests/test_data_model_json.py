@@ -1,7 +1,7 @@
-from army.data_model import ArmyRoster
 from army.constants import Keyword, Keywords, Timing
 from army.data_model import (
     Ability,
+    ArmyRoster,
     BattleProfile,
     Effect,
     Regiment,
@@ -13,8 +13,8 @@ from dice.dice import Dice
 
 d = Dice(4, 6)
 t = Timing.YOUR_COMBAT_PHASE
-e = Effect("a description effect", t, d)
-e_no_dice = Effect("a description effect", t, None)
+e = Effect("a description effect")
+e_no_dice = Effect("a description effect")
 
 
 def clanrats() -> Warscroll:
@@ -43,11 +43,7 @@ def clanrats() -> Warscroll:
             Ability(
                 name="Seething Swarm",
                 desc="Clanrats overwhelm their enemies with their seemingly endless numbers - biting, stabbing and trampling their own fallen beneath their bloody claws.",
-                effect=Effect(
-                    desc="You can return D3 slain models to this unit.",
-                    timing=Timing.END_OF_ANY_TURN,
-                    dice=Dice(1, 3),
-                ),
+                effect=Effect(desc="You can return D3 slain models to this unit."),
                 keywords=Keywords([]),
                 timing=Timing.END_OF_ANY_TURN,
             )
@@ -186,6 +182,7 @@ def test_regiment_valid():
     r.add_unit(u)
 
     assert r.is_valid
+
 
 def test_army_roster():
     ar = ArmyRoster()

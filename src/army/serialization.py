@@ -1,20 +1,26 @@
 import json
 from pathlib import Path
-from typing import Protocol, Self
+from typing import Mapping, Protocol, TypedDict
+
+type JsonObject = Mapping[str, object]
 
 
-class JsonSerializable(Protocol):
-    def to_json(self) -> dict: ...
-
-    @classmethod
-    def from_json(cls, data: dict) -> Self: ...
+class JsonWritable(Protocol):
+    def to_json(self) -> JsonObject: ...
 
 
-def save_config(obj: JsonSerializable, file_path: Path) -> None:
-    with open(file_path, "a") as f:
-        payload: dict = obj.to_json()
-        item: dict = {"type": str(type(obj)), "version": 0, "payload": payload}
+class SerializedItem(TypedDict):
+    type: str
+    version: int
+    payload: JsonObject
+
+
+def save_config(obj: JsonWritable, file_path: Path) -> None:
+    with file_path.open("a", encoding="utf-8") as f:
+        payload = obj.to_json()
+        item: SerializedItem = {
+            "type": type(obj).__qualname__,
+            "version": 0,
+            "payload": payload,
+        }
         json.dump(item, f, indent=4)
-
-
-# TODO: create a load_serialization function

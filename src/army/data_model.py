@@ -1,52 +1,31 @@
 from __future__ import annotations
 
 from enum import StrEnum
-from typing import NotRequired, TypedDict
+from typing import TypedDict
 
 from army.constants import Keyword, Keywords, KeywordsDict, Timing, TimingDict
-from dice.dice import Dice, DiceDict
 
 
 class EffectDict(TypedDict):
-    """
-    Attributes:
-        desc (_str_): _Effect description_
-        timing (_TimingDict_): _The effect timing_
-        dice (_Optional DiceDict_): _Any Dice associated with the effect_
-    """
-
     desc: str
-    timing: TimingDict
-    dice: NotRequired[DiceDict]
 
 
-# TODO : Remove Timing and Dice from Effect....possibly add Target (of the effect)
 class Effect:
-    def __init__(self, desc: str, timing: Timing, dice: Dice | None = None):
+    def __init__(self, desc: str):
         self.desc: str = desc
-        self.timing: Timing = timing
-        self.dice: Dice | None = dice
 
     def to_json(self) -> EffectDict:
-        result: EffectDict = {"desc": self.desc, "timing": self.timing.to_json()}
-        if self.dice:
-            result["dice"] = self.dice.to_json()
+        result: EffectDict = {"desc": self.desc}
         return result
 
     @classmethod
     def from_json(cls, data: EffectDict, version: int = 0) -> Effect:
         return Effect(
             desc=data["desc"],
-            timing=Timing.from_json(data["timing"]),
-            dice=Dice.from_json(data.get("dice")) if data.get("dice") else None,
         )
 
-    def __eq__(self, other):
-        return (
-            self.desc == other.desc
-            and self.timing == other.timing
-            and self.dice == other.dice
-        )
+    def __eq__(self, other: Effect) -> bool:  # type:ignore
+        return self.desc == other.desc
 
 
 class AbilityDict(TypedDict):
@@ -91,7 +70,7 @@ class Ability:
             keywords=Keywords.from_json(data["keywords"]),
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other: Ability) -> bool:  # type:ignore
         return (
             self.name == other.name
             and self.desc == other.desc
@@ -194,7 +173,7 @@ class WeaponProfile:
             data["range"],
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other: WeaponProfile) -> bool:  # type:ignore
         return (
             self.name == other.name
             and self.tags == other.tags
@@ -224,7 +203,7 @@ class BattleProfile:
         self.can_be_reinforced: bool = can_be_reinforced
         self.base_size: str = base_size
 
-    def __eq__(self, other):
+    def __eq__(self, other: BattleProfile) -> bool:  # type:ignore
         return (
             self.unit_size == other.unit_size
             and self.points == other.points
@@ -362,7 +341,7 @@ class Warscroll:
         unit._points = data["_points"]
         return unit
 
-    def __eq__(self, other):
+    def __eq__(self, other: Warscroll) -> bool:  # type:ignore
         return (
             self.name == other.name
             and self.num_models == other.num_models
@@ -403,7 +382,7 @@ class Regiment:
         r &= self.has_hero
         return r
 
-    def __eq__(self, other):
+    def __eq__(self, other: Regiment) -> bool:  # type:ignore
         return (
             self.units == other.units
             and self.is_valid == other.is_valid

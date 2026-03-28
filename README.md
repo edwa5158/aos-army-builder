@@ -22,3 +22,6 @@ I'm building a **modular Age of Sigmar toolkit**.
 * Add additional tools (e.g., a game assistant for playing matches).
 * Possibly replace the TUI with a full GUI.
 * Play full games of Age of Sigmar with a friend
+
+## Testing
+Use `uv run pytest`

@@ -24,5 +24,5 @@ def test_save_config_effect() -> None:
     fp = p.joinpath("effect.json")
     if fp.exists():
         os.remove(fp)
-    obj = Effect("an effect description", Timing.ANY_CHARGE_PHASE, Dice(3, 6))
+    obj = Effect("an effect description")
     save_config(obj, fp)

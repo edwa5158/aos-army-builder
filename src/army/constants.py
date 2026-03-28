@@ -131,5 +131,5 @@ class Keywords:
         keyword_list: list[Keyword] = [Keyword.from_json(kw) for kw in keywords_input]
         return Keywords(keyword_list)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Keywords) -> bool:  # type:ignore
         return self.keyword_list == other.keyword_list
