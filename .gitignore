@@ -9,6 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
-.cache/
+.cache/*
+!.cache/coverage/
+.cache/coverage/*
+!.cache/coverage/coverage.xml
 
 .vscode/
