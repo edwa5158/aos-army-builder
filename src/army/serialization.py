@@ -17,6 +17,4 @@ def save_config(obj: JsonSerializable, file_path: Path) -> None:
         json.dump(item, f, indent=4)
 
 
-# def load_config(file_path) -> JsonSerializable:
-#     with open(file_path, 'r') as fp:
-#         obj_json = json.load(fp)
+# TODO: create a load_serialization function

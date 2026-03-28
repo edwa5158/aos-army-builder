@@ -65,7 +65,7 @@ class Dice:
         self.num_sides: int = num_sides
 
     def roll_all(self) -> RollResult:
-        rolls: list[int] = [self._roll_one() for i in range(self.num_dice)]
+        rolls: list[int] = [self._roll_one() for _ in range(self.num_dice)]
         result = RollResult(self.num_sides, self.num_dice)
         result.rolls = rolls
         return result

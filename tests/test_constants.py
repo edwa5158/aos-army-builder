@@ -1,3 +1,4 @@
+from army.constants import KeywordsDict
 from army.constants import Keyword, Keywords, Timing
 
 
@@ -10,7 +11,7 @@ def test_timing_json_conversion():
     assert t2.name == t.name
 
 
-def test_Keyword_json_conversion():
+def test_keyword_json_conversion():
     t = Keyword.CHAMPION
     t_json = t.to_json()
     t2 = Keyword.from_json(t_json)
@@ -19,7 +20,7 @@ def test_Keyword_json_conversion():
     assert t2.name == t.name
 
 
-def test_Keywords_json_conversion():
+def test_keywords_json_conversion():
     keyword_list = [
         Keyword.CHAMPION,
         Keyword.HERO,
@@ -31,19 +32,19 @@ def test_Keywords_json_conversion():
     kw_json = keywords.to_json()
     kw2 = Keywords.from_json(kw_json)
 
-    assert kw2.keywords == keywords.keywords
+    assert kw2.keyword_list == keywords.keyword_list
 
 
-def test_Keywords_json_conversion_with_empty_list():
+def test_keywords_json_conversion_with_empty_list():
     keyword_list: list[Keyword] = []
     keywords = Keywords(keyword_list)
-    kw_json: dict[str, list[dict[str, str]]] = keywords.to_json()
+    kw_json: KeywordsDict = keywords.to_json()
     kw2 = Keywords.from_json(kw_json)
 
-    assert kw2.keywords == keywords.keywords
+    assert kw2.keyword_list == keywords.keyword_list
 
 
-def test_Keywords_contains():
+def test_keywords_contains():
     keyword_list = [
         Keyword.CHAMPION,
         Keyword.HERO,

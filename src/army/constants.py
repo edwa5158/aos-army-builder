@@ -103,26 +103,26 @@ class KeywordsDict(TypedDict):
 
 class Keywords:
     def __init__(self, keywords: list[Keyword]):
-        self.keywords: list[Keyword] = keywords
+        self.keyword_list: list[Keyword] = keywords
 
     def __contains__(self, keyword: Keyword):
-        return keyword in self.keywords
+        return keyword in self.keyword_list
 
     def to_json(self) -> KeywordsDict:
         """Returns a dictionary `{"keywords": [{"keyword": Keyword.value}, ...}`"""
-        result: list[KeywordDict] = [kw.to_json() for kw in self.keywords]
+        result: list[KeywordDict] = [kw.to_json() for kw in self.keyword_list]
         return {"keywords": result}
 
     @classmethod
     def from_json(cls, data: KeywordsDict) -> Keywords:
         """`data` is a dictionary `{"keywords": [{"keyword": Keyword.value}, ...}`"""
 
-        input: list[KeywordDict] | None = data.get("keywords", None)
-        if not input:
+        keywords_input: list[KeywordDict] | None = data.get("keywords", None)
+        if not keywords_input:
             return Keywords([])
 
-        keyword_list: list[Keyword] = [Keyword.from_json(kw) for kw in input]
+        keyword_list: list[Keyword] = [Keyword.from_json(kw) for kw in keywords_input]
         return Keywords(keyword_list)
 
     def __eq__(self, other):
-        return self.keywords == other.keywords
+        return self.keyword_list == other.keyword_list

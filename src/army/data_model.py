@@ -242,7 +242,7 @@ class BattleProfile:
         return result
 
     @classmethod
-    def from_json(self, data: BattleProfileDict) -> BattleProfile:
+    def from_json(cls, data: BattleProfileDict) -> BattleProfile:
         return BattleProfile(
             data["unit_size"],
             data["points"],
@@ -406,7 +406,7 @@ class Regiment:
         return (
             self.units == other.units
             and self.is_valid == other.is_valid
-            and self.is_general_regiment == other.is_general_unit
+            and self.is_general_regiment == other.is_general_regiment
             and self.has_hero == other.has_hero
             and self.points_total == other.points_total
         )

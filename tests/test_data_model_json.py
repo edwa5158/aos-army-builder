@@ -1,3 +1,4 @@
+from army.data_model import Regiment
 from army.constants import Keyword, Keywords, Timing
 from army.data_model import (
     Ability,
@@ -66,7 +67,7 @@ def clanrats() -> Warscroll:
     return ws
 
 
-def test_Effect_json():
+def test_effect_json():
 
     e_json = e.to_json()
     e2 = Effect.from_json(e_json)
@@ -74,7 +75,7 @@ def test_Effect_json():
     assert e == e2
 
 
-def test_Effect_no_dice_json():
+def test_effect_no_dice_json():
 
     e_json = e_no_dice.to_json()
     e2 = Effect.from_json(e_json)
@@ -82,7 +83,7 @@ def test_Effect_no_dice_json():
     assert e_no_dice == e2
 
 
-def test_Ability_json():
+def test_ability_json():
     a = Ability(
         "an ability", "a description", e, t, Keywords([Keyword.CHAMPION, Keyword.CHAOS])
     )
@@ -91,14 +92,14 @@ def test_Ability_json():
     assert a == a2
 
 
-def test_WeaponType_json():
+def test_weapon_type_json():
     melee = WeaponType.MELEE
     melee_json = melee.to_json()
     melee2 = WeaponType.from_json(melee_json)
     assert melee == melee2
 
 
-def test_WeaponProfile_json():
+def test_weapon_profile_json():
     wp = WeaponProfile(
         "Rusty Weapon", ["Crit (Auto-wound)"], 2, 4, 5, 0, 1, WeaponType.MELEE, "MELEE"
     )
@@ -106,19 +107,19 @@ def test_WeaponProfile_json():
     assert wp == wp2
 
 
-def test_BattleProfile_json():
+def test_battle_profile_json():
     bf = BattleProfile(20, 150, True, "25mm")
     bf2 = BattleProfile.from_json(bf.to_json())
     assert bf == bf2
 
 
-def test_Unit_json():
+def test_unit_json():
     ws = clanrats()
     ws2 = Warscroll.from_json(ws.to_json())
     assert ws == ws2
 
 
-def test_Unit_points():
+def test_unit_points():
     ws = clanrats()
     ws.is_reinforced = False
     assert ws.points == ws.battle_profile.points
@@ -135,12 +136,12 @@ def test_Unit_points():
         assert ws.points == ws.battle_profile.points
 
 
-def test_Unit_hero():
+def test_unit_hero():
     u = clanrats()
     assert not u.is_hero
 
 
-def test_Unit_reinforced():
+def test_unit_reinforced():
     u = clanrats()
     u.is_reinforced = False
     assert not u.is_reinforced
@@ -151,4 +152,9 @@ def test_Unit_reinforced():
     try:
         u.is_reinforced = 1  # type: ignore
     except ValueError:
-        assert True
+        return
+
+def test_regiment_equals():
+    r = Regiment()
+    r.add_unit(clanrats())
+    assert r == r
