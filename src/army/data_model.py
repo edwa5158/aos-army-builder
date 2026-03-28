@@ -129,6 +129,7 @@ class WeaponProfileDict(TypedDict):
     range: str
 
 
+# TODO: Update "tags" to weapon_abilities; possibly subclass Ability
 class WeaponProfile:
     """
     Attributes:
@@ -268,7 +269,7 @@ class UnitDict(TypedDict):
 
 # TODO: Update this to be a Warscroll class, which is the generic representation of the rules
 # TODO: Create a new class called "Unit" which represents a specific implementation of the Warscroll in an army
-class Unit:
+class Warscroll:
     def __init__(
         self,
         name: str,
@@ -343,8 +344,8 @@ class Unit:
         return result
 
     @classmethod
-    def from_json(cls, data: UnitDict) -> Unit:
-        unit = Unit(
+    def from_json(cls, data: UnitDict) -> Warscroll:
+        unit = Warscroll(
             data["name"],
             data["num_models"],
             data["move"],
@@ -381,20 +382,20 @@ class Unit:
 
 class Regiment:
     def __init__(self):
-        self.units: list[Unit] = []
+        self.units: list[Warscroll] = []
         self.is_valid: bool = False
-        self.is_general_unit: bool = False
+        self.is_general_regiment: bool = False
         self.has_hero: bool = False
         self.points_total: int = 0
 
-    def add_unit(self, unit: Unit) -> None:
+    def add_unit(self, unit: Warscroll) -> None:
         self.units.append(unit)
         self.has_hero = self.has_hero or unit.is_hero
         self.points_total += unit.points
 
     @property
     def max_units(self) -> int:
-        return 4 if self.is_general_unit else 3
+        return 4 if self.is_general_regiment else 3
 
     def validate(self) -> bool:
         r: bool = True
@@ -405,7 +406,7 @@ class Regiment:
         return (
             self.units == other.units
             and self.is_valid == other.is_valid
-            and self.is_general_unit == other.is_general_unit
+            and self.is_general_regiment == other.is_general_unit
             and self.has_hero == other.has_hero
             and self.points_total == other.points_total
         )

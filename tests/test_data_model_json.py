@@ -3,7 +3,7 @@ from army.data_model import (
     Ability,
     BattleProfile,
     Effect,
-    Unit,
+    Warscroll,
     WeaponProfile,
     WeaponType,
 )
@@ -15,8 +15,8 @@ e = Effect("a description effect", t, d)
 e_no_dice = Effect("a description effect", t, None)
 
 
-def clanrats() -> Unit:
-    u = Unit(
+def clanrats() -> Warscroll:
+    ws = Warscroll(
         "clanrats",
         20,
         6,
@@ -63,7 +63,7 @@ def clanrats() -> Unit:
         ),
         battle_profile=BattleProfile(20, 150, True, "25mm"),
     )
-    return u
+    return ws
 
 
 def test_Effect_json():
@@ -99,47 +99,40 @@ def test_WeaponType_json():
 
 
 def test_WeaponProfile_json():
-    crit_auto_wound: str = "Crit (Auto-wound)"
     wp = WeaponProfile(
-        "Rusty Weapon", [crit_auto_wound], 2, 4, 5, 0, 1, WeaponType.MELEE, "MELEE"
+        "Rusty Weapon", ["Crit (Auto-wound)"], 2, 4, 5, 0, 1, WeaponType.MELEE, "MELEE"
     )
-    wp_json = wp.to_json()
-    wp2 = WeaponProfile.from_json(wp_json)
+    wp2 = WeaponProfile.from_json(wp.to_json())
     assert wp == wp2
 
 
 def test_BattleProfile_json():
     bf = BattleProfile(20, 150, True, "25mm")
-
-    bf_json = bf.to_json()
-    bf2 = BattleProfile.from_json(bf_json)
+    bf2 = BattleProfile.from_json(bf.to_json())
     assert bf == bf2
 
 
 def test_Unit_json():
-    u = clanrats()
-    u_json = u.to_json()
-
-    u2 = Unit.from_json(u_json)
-
-    assert u == u2
+    ws = clanrats()
+    ws2 = Warscroll.from_json(ws.to_json())
+    assert ws == ws2
 
 
 def test_Unit_points():
-    u = clanrats()
-    u.is_reinforced = False
-    assert u.points == u.battle_profile.points
+    ws = clanrats()
+    ws.is_reinforced = False
+    assert ws.points == ws.battle_profile.points
 
-    u.is_reinforced = True
-    assert u.points == u.battle_profile.points * 2
+    ws.is_reinforced = True
+    assert ws.points == ws.battle_profile.points * 2
 
-    u.is_reinforced = False
-    u.battle_profile.can_be_reinforced = False
+    ws.is_reinforced = False
+    ws.battle_profile.can_be_reinforced = False
 
     try:
-        u.is_reinforced = True
+        ws.is_reinforced = True
     except ValueError:
-        assert u.points == u.battle_profile.points
+        assert ws.points == ws.battle_profile.points
 
 
 def test_Unit_hero():

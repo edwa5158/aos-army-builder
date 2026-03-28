@@ -3,21 +3,23 @@ from army.data_model import (
     BattleProfile,
     Effect,
     Keyword,
-    Unit,
+    Warscroll,
     WeaponProfile,
     WeaponType,
 )
 
-crit_auto_wound:str = "Crit (Auto-wound)"
+crit_auto_wound: str = "Crit (Auto-wound)"
 
 
-clanrats = Unit("Clanrats")
+clanrats = Warscroll("Clanrats")
 clanrats.control = 1
 clanrats.health = 1
 clanrats.move = 6
 clanrats.save = 5
 clanrats.weapon_profiles = [
-    WeaponProfile("Rusty Weapon", [crit_auto_wound], 2, 4, 5, 0, 1, WeaponType.MELEE, "MELEE")
+    WeaponProfile(
+        "Rusty Weapon", [crit_auto_wound], 2, 4, 5, 0, 1, WeaponType.MELEE, "MELEE"
+    )
 ]
 clanrats.url = "https://wahapedia.ru/aos4/factions/skaven/Clanrats"
 clanrats.keywords = [
