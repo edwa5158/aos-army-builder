@@ -13,3 +13,5 @@ DB_PATH = PROJECT_ROOT / "army_roster.db"
 engine = create_engine(f"sqlite:///{DB_PATH}")
 
 SessionLocal = sessionmaker(bind=engine)
+
+

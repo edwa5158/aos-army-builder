@@ -4,12 +4,6 @@ from enum import Enum, StrEnum
 from typing import TypedDict
 
 from army.constants import Keyword, Keywords, KeywordsDict, Timing, TimingDict
-from sqlalchemy import Integer, String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-
-class Base(DeclarativeBase):
-    pass
-
 
 
 class EffectDict(TypedDict):
@@ -84,15 +78,6 @@ class Ability:
             and self.timing == other.timing
             and self.keywords == other.keywords
         )
-
-
-class WeaponAbility(Base):
-    __tablename__ = "WeaponAbilities"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String, unique=True)
-    description: Mapped[str] = mapped_column(String)
-
 
 
 class WeaponAbility(Enum):
@@ -309,7 +294,6 @@ class UnitDict(TypedDict):
     _points: int
 
 
-# TODO: Update this to be a Warscroll class, which is the generic representation of the rules
 # TODO: Create a new class called "Unit" which represents a specific implementation of the Warscroll in an army
 class Warscroll:
     def __init__(
