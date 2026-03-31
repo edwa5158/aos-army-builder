@@ -1,0 +1,12 @@
+{
+    "weapon_abilities": [
+        {
+            "name": "Anti-X (+1 Rend)",
+            "desc": "Add 1 to this weapon's Rend characteristic if the target has the keyword after 'Anti-' or fulfils the condition after 'Anti-'. Multiples of this ability are cumulative. For example, if a weapon has both Anti-charge (+1 Rend) and Anti-HERO (+1 Rend), then add 2 to the Rend characteristic of the weapon for attacks that target a HERO that charged in the same turn."
+        },
+        {
+            "name": "Charge (+1 Damage)",
+            "desc": "Add 1 to this weapon's Damage characteristic if the attacking unit charged this turn."
+        }
+    ]
+}

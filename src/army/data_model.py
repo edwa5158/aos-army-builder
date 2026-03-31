@@ -4,6 +4,12 @@ from enum import Enum, StrEnum
 from typing import TypedDict
 
 from army.constants import Keyword, Keywords, KeywordsDict, Timing, TimingDict
+from sqlalchemy import Integer, String
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+class Base(DeclarativeBase):
+    pass
+
 
 
 class EffectDict(TypedDict):
@@ -80,6 +86,15 @@ class Ability:
         )
 
 
+class WeaponAbility(Base):
+    __tablename__ = "WeaponAbilities"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
+    description: Mapped[str] = mapped_column(String)
+
+
+
 class WeaponAbility(Enum):
     ANTI_X = {
         "name": "Anti-X (+1 Rend)",
@@ -98,23 +113,33 @@ class WeaponAbility(Enum):
     }
     COMPANION = {
         "name": "Companion",
-        "desc": "Unless otherwise specified, attacks made by this weapon are not affected by friendly abilities that modify hit rolls, wound rolls or weapon characteristics, except for those that apply negative modifiers (e.g. 'Covering Fire').",
+        "desc": "Unless otherwise specified, attacks made by this weapon "
+        + "are not affected by friendly abilities that modify hit rolls, "
+        + "wound rolls or weapon characteristics, except for those that apply negative modifiers (e.g. 'Covering Fire').",
     }
     CRIT_2_HITS = {
         "name": "Crit (2 Hits)",
-        "desc": "If an attack made with this weapon scores a critical hit, that attack scores 2 hits on the target unit instead of 1. Make a wound roll for each hit.",
+        "desc": "If an attack made with this weapon scores a critical hit, "
+        + "that attack scores 2 hits on the target unit instead of 1. Make "
+        + "a wound roll for each hit.",
     }
     CRIT_AUTO_WOUND = {
         "name": "Crit (Auto-wound)",
-        "desc": "If an attack made with this weapon scores a critical hit, that attack automatically wounds the target. Make a save roll as normal.",
+        "desc": "If an attack made with this weapon scores a critical hit, "
+        + "that attack automatically wounds the target. Make a save roll "
+        + "as normal.",
     }
     CRIT_MORTAL = {
         "name": "Crit (Mortal)",
-        "desc": "If an attack made with this weapon scores a critical hit, that attack inflicts mortal damage on the target unit equal to the Damage characteristic of that weapon and the attack sequence ends.",
+        "desc": "If an attack made with this weapon scores a critical hit, "
+        + "that attack inflicts mortal damage on the target unit equal to "
+        + "the Damage characteristic of that weapon and the attack "
+        + "sequence ends.",
     }
     SHOOT_IN_COMBAT = {
         "name": "Shoot in Combat",
-        "desc": "This weapon can be used to make shooting attacks even if the attacking unit is in combat.",
+        "desc": "This weapon can be used to make shooting attacks even "
+        + "if the attacking unit is in combat.",
     }
 
 
