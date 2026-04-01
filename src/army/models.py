@@ -16,7 +16,7 @@ class WeaponAbility(Base):
     description: Mapped[str] = mapped_column(String)
 
     def __repr__(self) -> str:
-        return f"{self.id=}\n{self.name=}\n{self.description=}"
+        return f"{self.name}: {self.description}"
 
 
 class WeaponType(Base):
@@ -28,7 +28,7 @@ class WeaponType(Base):
 
 
 weapon_profile_abilities = Table(
-    "weapon_profile_abilities",  # must match existing table name
+    "WeaponProfileAbility",  # must match existing table name
     Base.metadata,
     Column("weapon_profile_id", ForeignKey("WeaponProfile.id"), primary_key=True),
     Column("weapon_ability_id", ForeignKey("WeaponAbility.id"), primary_key=True),
@@ -69,3 +69,27 @@ class WeaponProfile(Base):
 
     def __repr__(self) -> str:
         return f"{self.name}"
+
+
+class BattleProfile(Base):
+    __tablename__ = "BattleProfile"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    unit_size: Mapped[int] = mapped_column(Integer)
+    points: Mapped[int] = mapped_column(Integer)
+    can_be_reinforced: Mapped[int] = mapped_column(Integer)
+    base_size: Mapped[str] = mapped_column(String)
+
+
+class Warscroll(Base):
+    __tablename__ = "Warscroll"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String)
+    move: Mapped[int] = mapped_column(Integer)
+    save: Mapped[int] = mapped_column(Integer)
+    control: Mapped[int] = mapped_column(Integer)
+    health: Mapped[int] = mapped_column(Integer)
+    battle_profile_id: Mapped[int] = mapped_column(ForeignKey("BattleProfile.id"))
+    url: Mapped[str] = mapped_column(String)
+    lore: Mapped[str] = mapped_column(String)

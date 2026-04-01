@@ -6,10 +6,11 @@ from army.models import WeaponAbility, WeaponProfile
 
 def main():
     session: Session = SessionLocal()
-    weapon_profiles = session.query(WeaponProfile)
+    
+    rusty_weapons = session.query(WeaponProfile).where(WeaponProfile.name == "Rusty Weapons").one()
 
-    for wp in weapon_profiles:
-        print(wp)
+    print(f"{rusty_weapons.name}")
+    print(f"{rusty_weapons.attack}")
 
 if __name__ == "__main__":
     main()
