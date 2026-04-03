@@ -12,3 +12,6 @@ wheels/
 .cache/
 coverage.xml
 .vscode/
+
+*.db
+*.sqdbpro
