@@ -1,9 +1,28 @@
+CREATE TABLE Timing (
+    [id] INTEGER NOT NULL,
+    [name] TEXT UNIQUE NOT NULL,
+    [phase] TEXT CHECK ([phase] IN (
+        'Deployment Phase', 
+        'Start of Battle Round', 
+        'Start of Turn', 
+        'Hero Phase', 
+        'Movement Phase', 
+        'Shooting Phase', 
+        'Charge Phase', 
+        'Combat Phase', 
+        'End of Turn'
+        )),
+    [once_per] TEXT
+);
+
 CREATE TABLE Ability (
 	[id] INTEGER PRIMARY KEY NOT NULL,
 	[name] TEXT NOT NULL,
     [desc] TEXT NOT NULL,
+    [timing_id] INTEGER NOT NULL,
     [declare] TEXT,
-    [effect] TEXT
+    [effect] TEXT,
+    FOREIGN KEY ("timing_id") REFERENCES "timing"("id") ON UPDATE CASCADE
 );
 
 CREATE TABLE AbilityKeywords (
