@@ -5,7 +5,7 @@ from pathlib import Path
 WARSCROLL_FILE = Path(__file__).resolve().parents[1] / "src" / "warscroll.html"
 
 
-def test_warscroll_layout_keeps_only_core_sections():
+def test_warscroll_layout_contains_core_sections():
     html = WARSCROLL_FILE.read_text(encoding="utf-8")
 
     assert re.search(r'<main[^>]*class="warscroll"', html, re.IGNORECASE)
@@ -20,7 +20,7 @@ def test_warscroll_layout_keeps_only_core_sections():
     assert re.search(r'<section[^>]*aria-labelledby="keywords"', html, re.IGNORECASE)
 
 
-def test_warscroll_layout_omits_embeds_and_tracking_markup():
+def test_warscroll_layout_omits_scripts_iframes_and_tracking():
     html = WARSCROLL_FILE.read_text(encoding="utf-8")
 
     for forbidden_pattern in (
