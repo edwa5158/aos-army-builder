@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Warscroll Layout</title>
+  <link rel="stylesheet" href="styles/shared.css">
+</head>
+<body>
+  <main class="warscroll">
+    <header>
+      <div class="field">
+        <label for="unit-name">Unit Name</label>
+        <input id="unit-name" class="unit-name" value="Clanrats">
+      </div>
+      <div class="unit-meta">
+        <div class="field">
+          <label for="faction">Faction</label>
+          <input id="faction" value="Skaven">
+        </div>
+        <div class="field">
+          <label for="unit-type">Unit Type</label>
+          <input id="unit-type" value="Infantry">
+        </div>
+      </div>
+    </header>
+
+    <section aria-labelledby="core-stats">
+      <h2 id="core-stats">Core Stats</h2>
+      <div class="stat-grid">
+        <div class="field">
+          <label for="move">Move</label>
+          <input id="move" value="6″">
+        </div>
+        <div class="field">
+          <label for="health">Health</label>
+          <input id="health" value="1">
+        </div>
+        <div class="field">
+          <label for="save">Save</label>
+          <input id="save" value="5+">
+        </div>
+        <div class="field">
+          <label for="control">Control</label>
+          <input id="control" value="1">
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="battle-profile">
+      <h2 id="battle-profile">Battle Profile</h2>
+      <div class="profile-grid">
+        <div class="field">
+          <label for="models">Models</label>
+          <input id="models" value="20">
+        </div>
+        <div class="field">
+          <label for="points">Points</label>
+          <input id="points" value="150">
+        </div>
+        <div class="field">
+          <label for="base-size">Base Size</label>
+          <input id="base-size" value="25mm">
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="weapons">
+      <h2 id="weapons">Weapons</h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Weapon</th>
+            <th scope="col">Range</th>
+            <th scope="col">Attacks</th>
+            <th scope="col">Hit</th>
+            <th scope="col">Wound</th>
+            <th scope="col">Rend</th>
+            <th scope="col">Damage</th>
+            <th scope="col">Abilities</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input aria-label="Weapon name" value="Rusty Weapons"></td>
+            <td><input aria-label="Weapon range" value="Melee"></td>
+            <td><input aria-label="Weapon attacks" value="2"></td>
+            <td><input aria-label="Weapon hit" value="4+"></td>
+            <td><input aria-label="Weapon wound" value="5+"></td>
+            <td><input aria-label="Weapon rend" value="0"></td>
+            <td><input aria-label="Weapon damage" value="1"></td>
+            <td><input aria-label="Weapon abilities" value="Crit Auto-Wound"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section aria-labelledby="abilities">
+      <h2 id="abilities">Abilities</h2>
+      <div class="field">
+        <label for="ability-name">Ability Name</label>
+        <input id="ability-name" value="Seething Swarm">
+      </div>
+      <div class="field">
+        <label for="ability-text">Rules Text</label>
+        <textarea id="ability-text">You can return D3 slain models to this unit.</textarea>
+      </div>
+    </section>
+
+    <section aria-labelledby="keywords">
+      <h2 id="keywords">Keywords</h2>
+      <div class="field">
+        <label for="keyword-list">Keyword List</label>
+        <input id="keyword-list" value="Chaos, Skaven, Verminus, Infantry, Champion, Musician, Standard Bearer">
+      </div>
+    </section>
+  </main>
+</body>
+</html>
