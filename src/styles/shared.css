@@ -1,0 +1,109 @@
+:root {
+  color-scheme: light;
+  font-family: Arial, sans-serif;
+  background: #f5f1e8;
+  color: #1d1d1d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  border: 2px solid #222;
+  background: #fffdf7;
+}
+
+section,
+header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #222;
+}
+
+section:last-child {
+  border-bottom: 0;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h2 {
+  margin-bottom: 12px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.unit-name {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.unit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.stat-grid,
+.profile-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #555;
+  background: #fff;
+  font: inherit;
+}
+
+textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  border: 1px solid #555;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #ece4cf;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
