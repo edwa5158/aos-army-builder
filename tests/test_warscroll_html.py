@@ -29,5 +29,9 @@ def test_warscroll_layout_omits_scripts_iframes_and_tracking():
         r"googletagmanager",
         r"google-analytics",
         r"doubleclick",
+        r"\bgtag\b",
+        r"facebook pixel",
+        r"hotjar",
+        r"\bon(?:click|error|load)\s*=",
     ):
         assert not re.search(forbidden_pattern, html, re.IGNORECASE)
