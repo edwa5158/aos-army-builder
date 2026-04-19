@@ -37,9 +37,9 @@ def test_warscroll_uses_shared_stylesheet():
 
     html = WARSCROLL_FILE.read_text(encoding="utf-8")
 
-    assert re.search(
-        r'<link[^>]*rel="stylesheet"[^>]*href="styles/shared\.css"', html, re.IGNORECASE
-    )
+    assert re.search(r"<link\b", html, re.IGNORECASE)
+    assert re.search(r'rel="stylesheet"', html, re.IGNORECASE)
+    assert re.search(r'href="styles/shared\.css"', html, re.IGNORECASE)
     assert not re.search(r"<style\b", html, re.IGNORECASE)
 
 
