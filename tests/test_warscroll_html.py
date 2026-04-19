@@ -3,6 +3,17 @@ from pathlib import Path
 
 
 WARSCROLL_FILE = Path(__file__).resolve().parents[1] / "src" / "warscroll.html"
+FORBIDDEN_PATTERNS = (
+    r"<script\b",
+    r"<iframe\b",
+    r"googletagmanager",
+    r"google-analytics",
+    r"doubleclick",
+    r"\bgtag\b",
+    r"facebook pixel",
+    r"hotjar",
+    r"\bon(?:click|error|load)\s*=",
+)
 
 
 def test_warscroll_layout_contains_core_sections():
@@ -23,15 +34,5 @@ def test_warscroll_layout_contains_core_sections():
 def test_warscroll_layout_omits_scripts_iframes_and_tracking():
     html = WARSCROLL_FILE.read_text(encoding="utf-8")
 
-    for forbidden_pattern in (
-        r"<script\b",
-        r"<iframe\b",
-        r"googletagmanager",
-        r"google-analytics",
-        r"doubleclick",
-        r"\bgtag\b",
-        r"facebook pixel",
-        r"hotjar",
-        r"\bon(?:click|error|load)\s*=",
-    ):
+    for forbidden_pattern in FORBIDDEN_PATTERNS:
         assert not re.search(forbidden_pattern, html, re.IGNORECASE)
